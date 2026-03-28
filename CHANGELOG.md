@@ -14,11 +14,11 @@ and by GitHub Actions on every push to `main`.
 
 ---
 
-## [Unreleased]
+## [Unreleased] — updated 2026-03-28
 
-_Watching for community results and new AMD GPU coverage._
+### Added
+- cross-platform support — Windows/Linux/macOS + fix benchmark crash (`352b0e7`)
 
----
 
 ## [1.0.0] — 2026-03-27
 
