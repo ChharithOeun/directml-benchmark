@@ -272,6 +272,17 @@ See [CHANGELOG.md](CHANGELOG.md) for full history.
 
 ---
 
+## Keywords
+
+`AMD DirectML benchmark` · `torch-directml performance` · `RX 5700 XT PyTorch`
+`AMD GPU Windows PyTorch` · `DirectML vs CPU speedup` · `torch-directml float32`
+`AMD ROCm benchmark` · `GPU matmul performance` · `privateuseone device PyTorch`
+`AMD Radeon GPU machine learning` · `PyTorch GPU benchmark Windows`
+`gfx1010 PyTorch` · `WSL2 ROCm benchmark` · `Apple Silicon MPS benchmark`
+`cross-platform GPU benchmark` · `NVIDIA CUDA benchmark Python`
+
+---
+
 ## License
 
 MIT — see [LICENSE](LICENSE)

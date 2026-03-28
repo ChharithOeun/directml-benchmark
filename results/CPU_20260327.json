@@ -19,8 +19,8 @@
     "cpu": {
       "device": "cpu",
       "device_name": "x86_64",
-      "elapsed_ms": 226.64,
-      "tflops": 0.0379
+      "elapsed_ms": 109.07,
+      "tflops": 0.0788
     },
     "gpu": null,
     "speedup_x": null,
