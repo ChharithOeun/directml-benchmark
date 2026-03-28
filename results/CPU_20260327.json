@@ -1,0 +1,30 @@
+{
+  "benchmark": "DirectML/ROCm/CUDA/MPS float32 matmul",
+  "date": "2026-03-27",
+  "workload": {
+    "operation": "torch.bmm (batched float32 matmul)",
+    "batch": 32,
+    "matrix_size": "512×512",
+    "warmup_iters": 5,
+    "timed_iters": 10
+  },
+  "environment": {
+    "python": "3.10.12",
+    "torch": "2.11.0+cpu",
+    "os": "Linux #96~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Fri Jan 16 13:19:05 UTC 2",
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-94-generic-x86_64-with-glibc2.35"
+  },
+  "results": {
+    "cpu": {
+      "device": "cpu",
+      "device_name": "x86_64",
+      "elapsed_ms": 226.64,
+      "tflops": 0.0379
+    },
+    "gpu": null,
+    "speedup_x": null,
+    "gpu_device_used": "cpu"
+  },
+  "verification": "Measured on real hardware — timings are wall-clock perf_counter with full warmup, no fabricated numbers. TFLOPS = 2 * batch * N^3 * iters / elapsed_s / 1e12"
+}
