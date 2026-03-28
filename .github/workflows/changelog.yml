@@ -1,0 +1,99 @@
+name: Auto-Update Changelog
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'CHANGELOG.md'
+
+jobs:
+  update-changelog:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate changelog entries
+        run: |
+          python3 - <<'PYEOF'
+          import subprocess, re, datetime, sys
+
+          CHANGELOG = "CHANGELOG.md"
+
+          result = subprocess.run(
+              ["git", "log", "--follow", "--pretty=format:%H", "--", CHANGELOG],
+              capture_output=True, text=True
+          )
+          last_changelog_commits = result.stdout.strip().splitlines()
+
+          log_range = f"{last_changelog_commits[0]}..HEAD" if last_changelog_commits else "HEAD~20..HEAD"
+
+          result = subprocess.run(
+              ["git", "log", log_range, "--pretty=format:%h|%ad|%s|%an", "--date=short"],
+              capture_output=True, text=True
+          )
+          lines = [l for l in result.stdout.strip().splitlines() if l.strip()]
+          if not lines:
+              print("No new commits.")
+              sys.exit(0)
+
+          CATEGORIES = {
+              "feat": "### Added", "fix": "### Fixed",
+              "docs": "### Changed", "chore": "### Changed",
+              "refactor": "### Changed", "perf": "### Added",
+              "test": "### Added",
+          }
+          buckets = {}
+          for line in lines:
+              parts = line.split("|", 3)
+              if len(parts) < 4:
+                  continue
+              sha, date, subject, author = parts
+              m = re.match(r'^(feat|fix|docs|chore|refactor|perf|test)(\([^)]+\))?!?:', subject)
+              key = m.group(1) if m else "chore"
+              header = CATEGORIES.get(key, "### Changed")
+              scope_m = re.match(r'^\w+\(([^)]+)\)', subject)
+              scope = f"**{scope_m.group(1)}** — " if scope_m else ""
+              body = re.sub(r'^\w+(\([^)]+\))?!?:\s*', '', subject)
+              buckets.setdefault(header, []).append(f"- {scope}{body} (`{sha}`)")
+
+          today = datetime.date.today().isoformat()
+          section_lines = [f"## [Unreleased] — updated {today}", ""]
+          for header in ["### Added", "### Fixed", "### Changed"]:
+              if header in buckets:
+                  section_lines.append(header)
+                  section_lines.extend(buckets[header])
+                  section_lines.append("")
+
+          with open(CHANGELOG, "r") as f:
+              content = f.read()
+
+          content = re.sub(r'## \[Unreleased\][^\n]*\n(?:(?!## \[).*\n)*', '', content)
+          insertion = "\n".join(section_lines) + "\n"
+          match = re.search(r'^## \[', content, re.MULTILINE)
+          if match:
+              content = content[:match.start()] + insertion + "\n" + content[match.start():]
+          else:
+              content = content.rstrip() + "\n\n" + insertion
+
+          with open(CHANGELOG, "w") as f:
+              f.write(content)
+          print(f"Changelog updated with {len(lines)} commit(s).")
+          PYEOF
+
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet CHANGELOG.md; then
+            echo "No changes."
+          else
+            git add CHANGELOG.md
+            git commit -m "chore(changelog): auto-update [skip ci]"
+            git push
+          fi

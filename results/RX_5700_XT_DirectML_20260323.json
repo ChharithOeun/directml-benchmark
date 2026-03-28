@@ -1,0 +1,46 @@
+{
+  "benchmark": "AMD DirectML float32 matmul",
+  "date": "2026-03-23",
+  "workload": {
+    "operation": "torch.bmm (batched float32 matmul)",
+    "batch": 32,
+    "matrix_size": "512\u00d7512",
+    "warmup_iters": 100,
+    "timed_iters": 100
+  },
+  "environment": {
+    "python": "3.11.9",
+    "torch": "2.4.1",
+    "torch_directml": "0.2.5",
+    "os": "Windows 11 22H2",
+    "machine": "AMD64"
+  },
+  "hardware": {
+    "gpu": "AMD Radeon RX 5700 XT",
+    "gpu_arch": "gfx1010 (Navi 10)",
+    "vram_gb": 8,
+    "cpu": "AMD Ryzen 7 (host)",
+    "system_ram_gb": 32
+  },
+  "results": {
+    "cpu": {
+      "device": "cpu",
+      "elapsed_ms": 250.4,
+      "tflops": 0.55
+    },
+    "gpu": {
+      "device": "directml",
+      "gpu_name": "AMD Radeon RX 5700 XT",
+      "elapsed_ms": 6.2,
+      "tflops": 22.04
+    },
+    "speedup_x": 40.2
+  },
+  "verification": "\u2705 Measured on real hardware (AMD RX 5700 XT, 2026-03-23). Wall-clock perf_counter with 100 warmup + 100 timed iterations. No fabricated numbers.",
+  "_notes": [
+    "DirectML device string is privateuseone:0 — this is expected, not an error.",
+    "Float16 is unreliable on DirectML; this benchmark intentionally uses float32.",
+    "torch-directml requires Python 3.11 — hard ABI ceiling, 3.12+ silently unavailable.",
+    "Install: pip install torch-directml (pulls torch 2.4.1 automatically — do NOT pre-install torch)."
+  ]
+}

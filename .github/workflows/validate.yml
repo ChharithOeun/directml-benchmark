@@ -1,0 +1,79 @@
+name: Validate Results
+
+# Validates every JSON file in results/ on every PR.
+# Ensures community-submitted results have required fields before merge.
+
+on:
+  pull_request:
+    paths:
+      - 'results/**/*.json'
+
+jobs:
+  validate-results:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate result JSON files
+        run: |
+          python3 - <<'PYEOF'
+          import json
+          import sys
+          from pathlib import Path
+
+          REQUIRED_FIELDS = [
+              "date",
+              "workload",
+              "environment",
+              "results",
+              "verification",
+          ]
+
+          REQUIRED_HARDWARE_OR_ENV = ["python", "torch"]
+
+          errors = []
+          results_dir = Path("results")
+
+          for f in results_dir.glob("**/*.json"):
+              print(f"Checking {f}...")
+              try:
+                  data = json.loads(f.read_text())
+              except json.JSONDecodeError as e:
+                  errors.append(f"{f}: Invalid JSON — {e}")
+                  continue
+
+              # Check top-level fields
+              for field in REQUIRED_FIELDS:
+                  if field not in data:
+                      errors.append(f"{f}: Missing required field '{field}'")
+
+              # Check results has at least cpu
+              results = data.get("results", {})
+              if "cpu" not in results:
+                  errors.append(f"{f}: results.cpu is required")
+
+              # Check CPU result has elapsed_ms
+              cpu = results.get("cpu", {})
+              if "elapsed_ms" not in cpu or cpu["elapsed_ms"] is None:
+                  errors.append(f"{f}: results.cpu.elapsed_ms must be a real number (not null)")
+
+              # Reject results without a date
+              if not data.get("date"):
+                  errors.append(f"{f}: date field is required (format: YYYY-MM-DD)")
+
+              # Warn if no hardware section (not an error, just a note)
+              if "hardware" not in data:
+                  print(f"  ⚠️  {f}: No 'hardware' section — consider adding GPU name and VRAM")
+
+              print(f"  ✅ {f.name}")
+
+          if errors:
+              print("\n❌ Validation FAILED:")
+              for e in errors:
+                  print(f"  {e}")
+              sys.exit(1)
+          else:
+              print(f"\n✅ All {len(list(results_dir.glob('**/*.json')))} result(s) valid.")
+          PYEOF
