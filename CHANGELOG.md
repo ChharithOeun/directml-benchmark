@@ -17,7 +17,7 @@ and by GitHub Actions on every push to `main`.
 ## [Unreleased] — updated 2026-03-28
 
 ### Added
-- cross-platform support — Windows/Linux/macOS + fix benchmark crash (`352b0e7`)
+- universal Python setup_env.py + SEO keywords + POSIX install script (`5af6f2c`)
 
 
 ## [1.0.0] — 2026-03-27
