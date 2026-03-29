@@ -1,3 +1,5 @@
+<p align="center"><img src="assets/banner.png" alt="DirectML Benchmark Banner" width="100%"></p>
+
 # directml-benchmark
 
 **Reproducible float32 GPU performance benchmarks — AMD, NVIDIA, Apple Silicon, CPU.**
