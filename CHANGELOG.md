@@ -14,10 +14,10 @@ and by GitHub Actions on every push to `main`.
 
 ---
 
-## [Unreleased] — updated 2026-03-28
+## [Unreleased] — updated 2026-03-29
 
-### Added
-- universal Python setup_env.py + SEO keywords + POSIX install script (`5af6f2c`)
+### Changed
+- Add neon banner (`bd764ee`)
 
 
 ## [1.0.0] — 2026-03-27
