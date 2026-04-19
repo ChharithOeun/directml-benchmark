@@ -41,7 +41,7 @@ jobs:
               try:
                   data = json.loads(f.read_text())
               except json.JSONDecodeError as e:
-                  errors.append(f"{f}: Invalid JSON — {e}")
+                  errors.append(f"{f}: Invalid JSON -- {e}")
                   continue
 
               # Check top-level fields
@@ -65,15 +65,15 @@ jobs:
 
               # Warn if no hardware section (not an error, just a note)
               if "hardware" not in data:
-                  print(f"  ⚠️  {f}: No 'hardware' section — consider adding GPU name and VRAM")
+                  print(f"  ------  {f}: No 'hardware' section -- consider adding GPU name and VRAM")
 
-              print(f"  ✅ {f.name}")
+              print(f"  --- {f.name}")
 
           if errors:
-              print("\n❌ Validation FAILED:")
+              print("\n--- Validation FAILED:")
               for e in errors:
                   print(f"  {e}")
               sys.exit(1)
           else:
-              print(f"\n✅ All {len(list(results_dir.glob('**/*.json')))} result(s) valid.")
+              print(f"\n--- All {len(list(results_dir.glob('**/*.json')))} result(s) valid.")
           PYEOF

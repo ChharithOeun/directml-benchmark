@@ -58,12 +58,12 @@ jobs:
               key = m.group(1) if m else "chore"
               header = CATEGORIES.get(key, "### Changed")
               scope_m = re.match(r'^\w+\(([^)]+)\)', subject)
-              scope = f"**{scope_m.group(1)}** — " if scope_m else ""
+              scope = f"**{scope_m.group(1)}** -- " if scope_m else ""
               body = re.sub(r'^\w+(\([^)]+\))?!?:\s*', '', subject)
               buckets.setdefault(header, []).append(f"- {scope}{body} (`{sha}`)")
 
           today = datetime.date.today().isoformat()
-          section_lines = [f"## [Unreleased] — updated {today}", ""]
+          section_lines = [f"## [Unreleased] -- updated {today}", ""]
           for header in ["### Added", "### Fixed", "### Changed"]:
               if header in buckets:
                   section_lines.append(header)
