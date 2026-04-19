@@ -17,7 +17,7 @@ and by GitHub Actions on every push to `main`.
 ## [Unreleased] -- updated 2026-04-19
 
 ### Changed
-- add Buy Me A Coffee link to README (`79e64f1`)
+- add Contributing section to README (`1457436`)
 
 
 ## [1.0.0] — 2026-03-27
